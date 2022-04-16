@@ -1,0 +1,10 @@
+.header-actions {
+	font-size: 1.2rem;
+	margin-right: 2.5rem;
+	margin-top: 0.5rem;
+	transition: all 0.2s ease-in-out;
+}
+.header-actions:hover {
+	color: #a16ae8;
+	transform: scale(1.1);
+}

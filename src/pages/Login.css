@@ -1,0 +1,14 @@
+.container {
+	display: flex;
+}
+.info-image {
+	width: 60%;
+	height: 100%;
+	display: flex;
+	justify-content: center;
+}
+.login-card {
+	width: 40%;
+
+	margin-top: 3.5rem;
+}

@@ -1,0 +1,15 @@
+.container {
+	display: flex;
+	justify-content: space-evenly;
+}
+
+.tagline-text {
+	display: flex;
+	max-width: 20%;
+	justify-content: space-between;
+}
+
+.landing-text {
+	margin-left: 10%;
+	margin-top: 6%;
+}
