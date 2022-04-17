@@ -6,14 +6,22 @@ import 'antd/dist/antd.css';
 import './App.css';
 import Landing from './pages/Landing';
 import Login from './pages/Login';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { Routes, Route, BrowserRouter } from 'react-router-dom';
 import Signup from './pages/Signup';
 
 function App() {
 	const count = useSelector((state) => state.counter.value);
 	const dispatch = useDispatch();
 
-	return <Signup></Signup>;
+	return (
+		<BrowserRouter>
+			<Routes>
+				<Route path="/" element={<Landing></Landing>}></Route>
+				<Route path="/login" element={<Login></Login>}></Route>
+				<Route path="/signup" element={<Signup></Signup>}></Route>
+			</Routes>
+		</BrowserRouter>
+	);
 }
 
 export default App;

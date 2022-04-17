@@ -1,24 +1,25 @@
 import { Card, Form, Switch, Input, Button } from 'antd';
 import React, { useState } from 'react';
-import loginImage from '../../assets/login.png';
-
+import loginImage from '../../assets/login2png.png';
 import './Login.css';
-
 import logoText from '../../assets/logo-text2.png';
+import { Link } from 'react-router-dom';
 
 function Signup() {
 	const [isAnonymous, setIsAnonymous] = useState(false);
 	return (
 		<div>
-			<img
-				src={logoText}
-				style={{
-					width: '8%',
-					height: '8%',
-					marginTop: '1rem',
-					marginLeft: '0.5rem'
-				}}
-			></img>
+			<Link to="/">
+				<img
+					src={logoText}
+					style={{
+						width: '8%',
+						height: '8%',
+						marginTop: '1rem',
+						marginLeft: '0.5rem'
+					}}
+				></img>
+			</Link>
 			<div className="container">
 				<div className="info-image">
 					<img src={loginImage} style={{ height: '60%', width: '60%' }}></img>
@@ -31,7 +32,7 @@ function Signup() {
 						<div className="login-form">
 							<Form
 								layout="vertical"
-								size="large"
+								size="medium"
 								name="basic"
 								labelCol={{
 									span: 8
@@ -73,6 +74,33 @@ function Signup() {
 										>
 											<Input.Password />
 										</Form.Item>
+										<Form.Item
+											name="confirm"
+											label="Confirm Password"
+											dependencies={['password']}
+											hasFeedback
+											rules={[
+												{
+													required: true,
+													message: 'Please confirm your password!'
+												},
+												({ getFieldValue }) => ({
+													validator(_, value) {
+														if (!value || getFieldValue('password') === value) {
+															return Promise.resolve();
+														}
+
+														return Promise.reject(
+															new Error(
+																'The two passwords that you entered do not match!'
+															)
+														);
+													}
+												})
+											]}
+										>
+											<Input.Password />
+										</Form.Item>
 									</div>
 								) : (
 									<div></div>
@@ -85,7 +113,7 @@ function Signup() {
 												setIsAnonymous(!isAnonymous);
 											}}
 										></Switch>
-										<p style={{ marginLeft: '5px' }}>Anonymous login?</p>
+										<p style={{ marginLeft: '5px' }}>Enter Anonymously?</p>
 									</div>
 								</Form.Item>
 								<Form.Item>
@@ -100,7 +128,9 @@ function Signup() {
 								</Form.Item>
 							</Form>
 
-							<Button shape="round">Already signed up? Login Instead</Button>
+							<Link to="/login">
+								<Button shape="round">Already signed up? Login Instead</Button>
+							</Link>
 						</div>
 					</Card>
 				</div>

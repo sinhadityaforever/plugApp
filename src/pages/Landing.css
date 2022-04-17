@@ -13,3 +13,15 @@
 	margin-left: 10%;
 	margin-top: 6%;
 }
+
+.get-started {
+	transition: all 0.2s ease-in-out;
+}
+.get-started:hover {
+	transform: scale(1.2);
+}
+.description-text {
+	font-size: 1rem;
+	max-width: 60%;
+	color: rgb(110, 110, 110);
+}

@@ -1,24 +1,27 @@
 import { Card, Form, Switch, Input, Button } from 'antd';
 import React, { useState } from 'react';
-import loginImage from '../../assets/login.png';
+import loginImage from '../../assets/login2png.png';
 import LandingHeader from '../components/LandingHeader';
 import './Login.css';
 import logo from '../../assets/logo.png';
 import logoText from '../../assets/logo-text2.png';
+import { Link } from 'react-router-dom';
 
 function Login() {
 	const [isAnonymous, setIsAnonymous] = useState(false);
 	return (
 		<div>
-			<img
-				src={logoText}
-				style={{
-					width: '8%',
-					height: '8%',
-					marginTop: '1rem',
-					marginLeft: '0.5rem'
-				}}
-			></img>
+			<Link to="/">
+				<img
+					src={logoText}
+					style={{
+						width: '8%',
+						height: '8%',
+						marginTop: '1rem',
+						marginLeft: '0.5rem'
+					}}
+				></img>
+			</Link>
 			<div className="container">
 				<div className="info-image">
 					<img src={loginImage} style={{ height: '60%', width: '60%' }}></img>
@@ -104,13 +107,16 @@ function Login() {
 										shape="round"
 										type="primary"
 										htmlType="submit"
+										size="large"
 									>
 										Login
 									</Button>
 								</Form.Item>
 							</Form>
 
-							<Button shape="round">New Here? Signup Instead.</Button>
+							<Link to="/signup">
+								<Button shape="round">New Here? Signup Instead.</Button>
+							</Link>
 						</div>
 					</Card>
 				</div>

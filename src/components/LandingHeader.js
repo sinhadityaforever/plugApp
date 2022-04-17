@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import logo from '../../assets/logo.png';
 import './LandingHeader.css';
 
@@ -14,9 +15,16 @@ function LandingHeader() {
 					marginRight: '3rem'
 				}}
 			>
-				<div className="header-actions">Home</div>
-				<div className="header-actions">Signup</div>
-				<div className="header-actions">Login</div>
+				<Link to={'/'}>
+					<div className="header-actions">Home</div>
+				</Link>
+				<Link to="/signup">
+					<div className="header-actions">Signup</div>
+				</Link>
+				<Link to="/login">
+					{' '}
+					<div className="header-actions">Login</div>
+				</Link>
 			</div>
 		</div>
 	);

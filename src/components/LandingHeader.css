@@ -3,6 +3,7 @@
 	margin-right: 2.5rem;
 	margin-top: 0.5rem;
 	transition: all 0.2s ease-in-out;
+	color: rgb(110, 110, 110);
 }
 .header-actions:hover {
 	color: #a16ae8;
