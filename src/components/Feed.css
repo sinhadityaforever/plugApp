@@ -1,0 +1,32 @@
+.profile-header {
+	display: flex;
+	align-items: center;
+}
+
+.card-reactions {
+	display: flex;
+}
+
+.card-content {
+	margin-bottom: 20px;
+}
+
+.profile-avatar {
+	width: 37px;
+	height: 37px;
+	border-radius: 50%;
+	object-fit: cover;
+	margin-right: 10px;
+}
+.feed-card {
+	margin: 20px;
+}
+
+.reactions-icon {
+	font-size: 20px;
+	margin-right: 5px;
+}
+
+.card-hr {
+	color: grey;
+}

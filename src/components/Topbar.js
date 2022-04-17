@@ -8,12 +8,23 @@ import {
 	PoweroffOutlined
 } from '@ant-design/icons';
 import avatar from '../../assets/avatar.png';
+import { Dropdown, Menu } from 'antd';
+import { Link } from 'react-router-dom';
 
 function Topbar() {
+	const menu = (
+		<Menu>
+			<Menu.Item>View Profile</Menu.Item>
+			<Menu.Item>Edit Profile</Menu.Item>
+			<Menu.Item>Logout</Menu.Item>
+		</Menu>
+	);
 	return (
 		<div className="topbar-container">
 			<div className="topbar-left">
-				<img className="logo-text" src={logoText}></img>
+				<Link to="/">
+					<img className="logo-text" src={logoText}></img>
+				</Link>
 			</div>
 			<div className="topbar-center">
 				<div className="searchbar">
@@ -26,7 +37,9 @@ function Topbar() {
 			</div>
 			<div className="topbar-right">
 				<div>
-					<img className="avatar-image" src={avatar}></img>
+					<Dropdown trigger={['click']} overlay={menu}>
+						<img className="avatar-image" src={avatar}></img>
+					</Dropdown>
 				</div>
 				{/* <EditFilled style={{ fontSize: '2rem', color: 'white' }} />
 				<div>
