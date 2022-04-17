@@ -1,0 +1,57 @@
+.leftbar {
+	flex: 3;
+	height: calc(100vh - 50px);
+	overflow-y: scroll;
+	position: sticky;
+	top: 50px;
+}
+
+::-webkit-scrollbar {
+	width: 5px;
+}
+::-webkit-scrollbar-track {
+	background-color: #f1f1f1;
+}
+::-webkit-scrollbar-thumb {
+	background-color: rgb(179, 179, 179);
+}
+
+.leftbar-wrapper {
+	padding: 20px;
+}
+
+.leftbar-list {
+	padding: 0;
+	margin: 0;
+	list-style: none;
+}
+
+.leftbar-list-item {
+	display: flex;
+	align-items: center;
+	margin-bottom: 3rem;
+}
+
+.leftbar-icon {
+	margin-right: 15px;
+	font-size: 2rem;
+	margin-left: 1rem;
+}
+
+.leftbar-list-item-text {
+	font-size: 1rem;
+}
+
+.leftbar-button {
+	width: 150px;
+	border: none;
+	padding: 10px;
+	border-radius: 5px;
+	font-weight: 500;
+}
+
+@media (max-width: 768px) {
+	.leftbar {
+		display: none;
+	}
+}

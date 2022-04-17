@@ -1,0 +1,20 @@
+.birthday-container {
+	display: flex;
+	align-items: center;
+}
+.birthday-img {
+	width: 40px;
+	height: 40px;
+	margin-right: 10px;
+}
+
+.birthday-text {
+	font-weight: 300;
+	font-size: 15px;
+}
+
+.rightbar-ad {
+	width: 100%;
+	border-radius: 10px;
+	margin: 30px 0;
+}

@@ -1,0 +1,40 @@
+.topbar-container {
+	background-color: #a16ae8;
+	min-height: 3.5rem;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.logo-text {
+	height: 3rem;
+	margin-left: 1rem;
+}
+
+.searchbar {
+	width: 50rem;
+	height: 30px;
+	background-color: white;
+	border-radius: 30px;
+	display: flex;
+	align-items: center;
+}
+
+.searchIcon {
+	font-size: 20px !important;
+	margin-left: 10px;
+}
+
+.searchInput {
+	border: none;
+	width: 70%;
+}
+
+.topbar-right {
+	display: flex;
+}
+
+.avatar-image {
+	height: 2.5rem;
+	margin-right: 1rem;
+}
