@@ -33,11 +33,17 @@
 		"@ant-design/icons": "^4.7.0",
 		"@reduxjs/toolkit": "^1.8.1",
 		"antd": "^4.19.5",
+		"axios": "^0.26.1",
 		"css-loader": "^5.2.7",
+		"firebase": "^9.6.11",
+		"firebase-admin": "^10.0.2",
+		"random-word-slugs": "^0.1.6",
 		"react": "^18.0.0",
+		"react-confirm-box": "^1.2.0",
 		"react-dom": "^18.0.0",
 		"react-redux": "^7.2.8",
 		"react-router-dom": "^6.3.0",
+		"react-uuid": "^1.0.2",
 		"style-loader": "^2.0.0",
 		"url-loader": "^4.1.1"
 	}

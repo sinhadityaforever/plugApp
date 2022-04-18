@@ -1,12 +1,99 @@
-import { Card, Form, Switch, Input, Button } from 'antd';
+import { Card, Form, Switch, Input, Button, message } from 'antd';
 import React, { useState } from 'react';
 import loginImage from '../../assets/login2png.png';
 import './Login.css';
 import logoText from '../../assets/logo-text2.png';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { authHelper } from '../../helpers/firebaseAuthHelper';
+import { db } from '../../config/firebaseConfig';
+import uuid from 'react-uuid';
+import { addDoc, collection, query, where, getDocs } from 'firebase/firestore';
+const axios = require('axios');
+import { generateSlug } from 'random-word-slugs';
+import { confirm } from 'react-confirm-box';
 
 function Signup() {
 	const [isAnonymous, setIsAnonymous] = useState(false);
+	const navigate = useNavigate();
+	const onSignup = async () => {
+		if (!isAnonymous) {
+			const result = await authHelper();
+
+			if (!result.isError) {
+				try {
+					const q = query(
+						collection(db, 'users'),
+						where('email', '==', result.data.user.email)
+					);
+
+					const querySnapshot = await getDocs(q);
+					if (querySnapshot.empty) {
+						try {
+							const newUser = await addDoc(collection(db, 'users'), {
+								name: result.data.user.displayName,
+								email: result.data.user.email,
+								isAnonymous: false
+							});
+							navigate('/home');
+						} catch (error) {
+							message.error('Sorry, we cant sign you up at this moment');
+						}
+					} else {
+						message.error(`You've already signed up. Please login`);
+						return;
+					}
+				} catch (error) {
+					message.error('Cant sign you up at this moment.');
+					console.log(error);
+				}
+			} else {
+				message.error('Cant log you in at this moment.');
+			}
+		} else {
+			try {
+				const slug = generateSlug(10, { format: 'title' });
+				console.log(slug);
+				const randomUser = await axios.get('https://randomuser.me/api');
+				console.log(randomUser.data.results[0]);
+				const options = {
+					labels: {
+						confirmable: 'Confirm',
+						cancellable: 'Cancel'
+					}
+				};
+				const result = await confirm(
+					`You'd be signing up as ${
+						randomUser.data.results[0].name.first +
+						' ' +
+						randomUser.data.results[0].name.last
+					}. Also, to login with this anonymous account, keep this phrase somewhere safe: "${slug}"`,
+					options
+				);
+				if (result) {
+					console.log('You click yes!');
+					try {
+						const newUser = await addDoc(collection(db, 'users'), {
+							name: `${
+								randomUser.data.results[0].name.first +
+								' ' +
+								randomUser.data.results[0].name.last
+							}`,
+							email: randomUser.data.results[0].email,
+							isAnonymous: true,
+							secretPhrase: slug
+						});
+						navigate('/home');
+					} catch (error) {
+						message.error('Sorry, we cant sign you up at this moment');
+					}
+
+					return;
+				}
+			} catch (error) {
+				console.log(error);
+			}
+		}
+	};
 	return (
 		<div>
 			<Link to="/">
@@ -47,65 +134,6 @@ function Signup() {
 								//  onFinishFailed={onFinishFailed}
 								autoComplete="off"
 							>
-								{!isAnonymous ? (
-									<div>
-										<Form.Item
-											label="Email Address"
-											name="email"
-											rules={[
-												{
-													required: true,
-													message: 'Please enter an email'
-												}
-											]}
-										>
-											<Input />
-										</Form.Item>
-
-										<Form.Item
-											label="Password"
-											name="password"
-											rules={[
-												{
-													required: true,
-													message: 'Please input your password!'
-												}
-											]}
-										>
-											<Input.Password />
-										</Form.Item>
-										<Form.Item
-											name="confirm"
-											label="Confirm Password"
-											dependencies={['password']}
-											hasFeedback
-											rules={[
-												{
-													required: true,
-													message: 'Please confirm your password!'
-												},
-												({ getFieldValue }) => ({
-													validator(_, value) {
-														if (!value || getFieldValue('password') === value) {
-															return Promise.resolve();
-														}
-
-														return Promise.reject(
-															new Error(
-																'The two passwords that you entered do not match!'
-															)
-														);
-													}
-												})
-											]}
-										>
-											<Input.Password />
-										</Form.Item>
-									</div>
-								) : (
-									<div></div>
-								)}
-
 								<Form.Item>
 									<div style={{ display: 'flex' }}>
 										<Switch
@@ -122,8 +150,9 @@ function Signup() {
 										shape="round"
 										type="primary"
 										htmlType="submit"
+										onClick={onSignup}
 									>
-										{isAnonymous ? 'Enter Anonymously' : 'Signup'}
+										{isAnonymous ? 'Enter Anonymously' : 'Signup With Google'}
 									</Button>
 								</Form.Item>
 							</Form>

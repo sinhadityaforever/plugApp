@@ -1,14 +1,60 @@
-import { Card, Form, Switch, Input, Button } from 'antd';
-import React, { useState } from 'react';
+import { Card, Form, Switch, Input, Button, message } from 'antd';
+import React, { useRef, useState } from 'react';
 import loginImage from '../../assets/login2png.png';
 import LandingHeader from '../components/LandingHeader';
 import './Login.css';
 import logo from '../../assets/logo.png';
 import logoText from '../../assets/logo-text2.png';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { authHelper } from '../../helpers/firebaseAuthHelper';
+import { collection, getDocs, query, where } from 'firebase/firestore';
+import { db } from '../../config/firebaseConfig';
 
 function Login() {
 	const [isAnonymous, setIsAnonymous] = useState(false);
+	const phraseRef = useRef();
+	const navigate = useNavigate();
+	const onLogin = async () => {
+		if (!isAnonymous) {
+			const result = await authHelper();
+			if (!result.isError) {
+				try {
+					const q = query(
+						collection(db, 'users'),
+						where('email', '==', result.data.user.email)
+					);
+					const querySnapshot = await getDocs(q);
+					if (!querySnapshot.empty) {
+						//Set redux user
+						//Redirect
+						navigate('/home');
+					} else {
+						message.error(`You're not a registered user`);
+					}
+				} catch (error) {
+					message.error('Cant log you in at this moment');
+					console.log(error);
+				}
+			}
+		} else {
+			console.log(phraseRef.current.input.value);
+			try {
+				const q = query(
+					collection(db, 'users'),
+					where('secretPhrase', '==', phraseRef.current.input.value)
+				);
+				const querySnapshot = await getDocs(q);
+				if (!querySnapshot.empty) {
+					navigate('/home');
+				} else {
+					message.error('Invalid Secret Phrase');
+				}
+			} catch (error) {
+				message.error('An error occurred.');
+			}
+		}
+	};
+
 	return (
 		<div>
 			<Link to="/">
@@ -50,32 +96,7 @@ function Login() {
 								autoComplete="off"
 							>
 								{!isAnonymous ? (
-									<div>
-										<Form.Item
-											label="Email Address"
-											name="email"
-											rules={[
-												{
-													required: true,
-													message: 'Please enter an email'
-												}
-											]}
-										>
-											<Input />
-										</Form.Item>
-										<Form.Item
-											label="Password"
-											name="password"
-											rules={[
-												{
-													required: true,
-													message: 'Please input your password!'
-												}
-											]}
-										>
-											<Input.Password />
-										</Form.Item>
-									</div>
+									<div></div>
 								) : (
 									<Form.Item
 										label="Secret Security Phrase"
@@ -87,7 +108,7 @@ function Login() {
 											}
 										]}
 									>
-										<Input />
+										<Input ref={phraseRef} />
 									</Form.Item>
 								)}
 
@@ -108,8 +129,9 @@ function Login() {
 										type="primary"
 										htmlType="submit"
 										size="large"
+										onClick={onLogin}
 									>
-										Login
+										{isAnonymous ? 'Login anonymously' : 'Google login'}
 									</Button>
 								</Form.Item>
 							</Form>

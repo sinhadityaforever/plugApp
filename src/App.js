@@ -10,10 +10,13 @@ import { Routes, Route, BrowserRouter } from 'react-router-dom';
 import Signup from './pages/Signup';
 import Home from './pages/Home';
 import ProfileEdit from './pages/ProfileEdit';
+import { initializeApp } from 'firebase/app';
+import { firebaseApp } from '../config/firebaseConfig';
 
 function App() {
 	const count = useSelector((state) => state.counter.value);
 	const dispatch = useDispatch();
+	firebaseApp();
 
 	return (
 		<BrowserRouter>
