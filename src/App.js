@@ -9,6 +9,7 @@ import Login from './pages/Login';
 import { Routes, Route, BrowserRouter } from 'react-router-dom';
 import Signup from './pages/Signup';
 import Home from './pages/Home';
+import ProfileEdit from './pages/ProfileEdit';
 
 function App() {
 	const count = useSelector((state) => state.counter.value);
@@ -21,6 +22,7 @@ function App() {
 				<Route path="/login" element={<Login></Login>}></Route>
 				<Route path="/signup" element={<Signup></Signup>}></Route>
 				<Route path="/home" element={<Home></Home>}></Route>
+				<Route path="/editprofile" element={<ProfileEdit />}></Route>
 			</Routes>
 		</BrowserRouter>
 	);
