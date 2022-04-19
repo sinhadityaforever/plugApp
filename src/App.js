@@ -11,12 +11,24 @@ import Signup from './pages/Signup';
 import Home from './pages/Home';
 import ProfileEdit from './pages/ProfileEdit';
 import { initializeApp } from 'firebase/app';
-import { firebaseApp } from '../config/firebaseConfig';
+import { db, firebaseApp } from '../config/firebaseConfig';
+import { doc, getDoc } from 'firebase/firestore';
+import { setUser } from './features/userSlice';
 
 function App() {
-	const count = useSelector((state) => state.counter.value);
 	const dispatch = useDispatch();
 	firebaseApp();
+
+	const retrieveUser = () => {
+		console.log('heyoo');
+		if (localStorage.getItem('user')) {
+			const user = JSON.parse(localStorage.getItem('user'));
+			dispatch(setUser(user));
+			console.log('setUser done');
+		}
+	};
+
+	retrieveUser();
 
 	return (
 		<BrowserRouter>

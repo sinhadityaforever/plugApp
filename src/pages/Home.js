@@ -1,4 +1,5 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 import Feed from '../components/Feed';
 import Leftbar from '../components/Leftbar';
 import Rightbar from '../components/Rightbar';

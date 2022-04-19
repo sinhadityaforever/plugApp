@@ -11,8 +11,11 @@ import { addDoc, collection, query, where, getDocs } from 'firebase/firestore';
 const axios = require('axios');
 import { generateSlug } from 'random-word-slugs';
 import { confirm } from 'react-confirm-box';
+import { useDispatch } from 'react-redux';
+import { setUser } from '../features/userSlice';
 
 function Signup() {
+	const dispatch = useDispatch();
 	const [isAnonymous, setIsAnonymous] = useState(false);
 	const navigate = useNavigate();
 	const onSignup = async () => {
@@ -34,7 +37,17 @@ function Signup() {
 								email: result.data.user.email,
 								isAnonymous: false
 							});
-							navigate('/home');
+							dispatch(
+								setUser({
+									id: newUser.id,
+									name: result.data.user.displayName,
+									email: result.data.user.email,
+									isAnonymous: false
+								})
+							);
+
+							localStorage.setItem('userId', newUser.id);
+							navigate('/editProfile');
 						} catch (error) {
 							message.error('Sorry, we cant sign you up at this moment');
 						}
@@ -70,7 +83,6 @@ function Signup() {
 					options
 				);
 				if (result) {
-					console.log('You click yes!');
 					try {
 						const newUser = await addDoc(collection(db, 'users'), {
 							name: `${
@@ -82,7 +94,20 @@ function Signup() {
 							isAnonymous: true,
 							secretPhrase: slug
 						});
-						navigate('/home');
+						dispatch(
+							setUser({
+								id: newUser.id,
+								name: `${
+									randomUser.data.results[0].name.first +
+									' ' +
+									randomUser.data.results[0].name.last
+								}`,
+								email: randomUser.data.results[0].email,
+								isAnonymous: true
+							})
+						);
+						localStorage.setItem('userId', newUser.id);
+						navigate('/editProfile');
 					} catch (error) {
 						message.error('Sorry, we cant sign you up at this moment');
 					}

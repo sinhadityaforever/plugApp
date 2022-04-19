@@ -1,10 +1,67 @@
-import React from 'react';
+import React, { useRef, useState } from 'react';
 import Topbar from '../components/Topbar';
 import './ProfileEdit.css';
 import avatar from '../../assets/avatar.png';
-import { Form, Input, Option, Select, Button, Card } from 'antd';
+import { Form, Input, Button, Card } from 'antd';
+import { getDownloadURL, ref, uploadBytes } from 'firebase/storage';
+import { db, storage } from '../../config/firebaseConfig';
+import uuid from 'react-uuid';
+import { doc, updateDoc } from 'firebase/firestore';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import {
+	updateImageUrl,
+	updateName,
+	updateStatus
+} from '../features/userSlice';
 
 function ProfileEdit() {
+	const navigate = useNavigate();
+	const dispatch = useDispatch();
+	const nameRef = useRef();
+	const statusRef = useRef();
+
+	const [image, setImage] = useState(null);
+	const previewFile = (file) => {
+		const reader = new FileReader();
+		reader.readAsDataURL(file);
+		reader.onloadend = () => {
+			setImage(reader.result);
+		};
+	};
+	const imageHandler = (selectedImage) => {
+		previewFile(selectedImage);
+	};
+	let userId = localStorage.getItem('userId');
+	console.log('this is userId' + userId);
+	const submitHandler = async () => {
+		console.log(1);
+		const userRef = doc(db, 'users', userId);
+		console.log(2);
+		if (image != null) {
+			const imageUuid = uuid();
+			const imageRef = ref(storage, `images/${imageUuid}`);
+			await uploadBytes(imageRef, image);
+			const imageUrl = await getDownloadURL(imageRef);
+			await updateDoc(userRef, {
+				name: nameRef.current.input.value,
+				status: nameRef.current.input.value,
+				imageUrl: imageUrl
+			});
+			dispatch(updateName(nameRef.current.input.value));
+			dispatch(updateStatus(statusRef.current.input.value));
+			dispatch(updateImageUrl(imageUrl));
+		} else {
+			await updateDoc(userRef, {
+				name: nameRef.current.input.value,
+				status: statusRef.current.input.value
+			});
+			dispatch(updateName(nameRef.current.input.value));
+			dispatch(updateStatus(statusRef.current.input.value));
+		}
+		navigate('/home');
+		//check
+	};
 	return (
 		<div>
 			<div>
@@ -17,16 +74,16 @@ function ProfileEdit() {
 						<span className="title-text">Profile Settings</span>
 					</div>
 					<div className="profile-picture-container">
-						<img className="profile-picture" src={avatar}></img>
+						<img className="profile-picture" src={image ? image : avatar}></img>
 					</div>
 					<div className="image-picker">
 						<input
 							type="file"
 							className="form-control"
 							accept=".png, .jpg, .jpeg"
-							// onChange={(e) => {
-							//   previewFile(e.target.files![0]);
-							// }}
+							onChange={(e) => {
+								imageHandler(e.target.files[0]);
+							}}
 						/>
 					</div>
 				</div>
@@ -41,31 +98,29 @@ function ProfileEdit() {
 									{ required: true, message: 'Please input your full name!' }
 								]}
 							>
-								<Input width={20} placeholder="Enter your full name" />
+								<Input
+									ref={nameRef}
+									width={20}
+									placeholder="Enter your full name"
+								/>
 							</Form.Item>
+							.
 							<Form.Item
-								name="gender"
-								label="Gender"
 								rules={[
-									{ required: true, message: 'Please select your gender' }
+									{ required: true, message: 'Please enter your first status' }
 								]}
+								label="Status"
+								nam="status"
 							>
-								<Select
-									placeholder="Select an option"
-									// onChange={this.onGenderChange}
-									allowClear
-								>
-									<Option value="male">male</Option>
-									<Option value="female">female</Option>
-									<Option value="other">other</Option>
-								</Select>
-							</Form.Item>
-
-							<Form.Item label="Status">
-								<Input placeholder="Set your new status" />
+								<Input ref={statusRef} placeholder="Set your new status" />
 							</Form.Item>
 							<Form.Item>
-								<Button shape="round" className="submit-button" type="submit">
+								<Button
+									shape="round"
+									className="submit-button"
+									type="Submit"
+									onClick={submitHandler}
+								>
 									Submit
 								</Button>
 							</Form.Item>

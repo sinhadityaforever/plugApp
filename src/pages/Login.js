@@ -9,8 +9,11 @@ import { Link, useNavigate } from 'react-router-dom';
 import { authHelper } from '../../helpers/firebaseAuthHelper';
 import { collection, getDocs, query, where } from 'firebase/firestore';
 import { db } from '../../config/firebaseConfig';
+import { useDispatch, useSelector } from 'react-redux';
+import { setUser } from '../features/userSlice';
 
 function Login() {
+	const dispatch = useDispatch();
 	const [isAnonymous, setIsAnonymous] = useState(false);
 	const phraseRef = useRef();
 	const navigate = useNavigate();
@@ -27,6 +30,18 @@ function Login() {
 					if (!querySnapshot.empty) {
 						//Set redux user
 						//Redirect
+						console.log(querySnapshot.docs[0].id);
+						dispatch(
+							setUser({
+								id: querySnapshot.docs[0].id,
+								name: querySnapshot.docs[0].data().name,
+								email: querySnapshot.docs[0].data().email,
+								isAnonymous: false,
+								status: querySnapshot.docs[0].data().status
+							})
+						);
+						localStorage.setItem('userId', querySnapshot.docs[0].id);
+
 						navigate('/home');
 					} else {
 						message.error(`You're not a registered user`);
@@ -37,7 +52,6 @@ function Login() {
 				}
 			}
 		} else {
-			console.log(phraseRef.current.input.value);
 			try {
 				const q = query(
 					collection(db, 'users'),
@@ -45,6 +59,16 @@ function Login() {
 				);
 				const querySnapshot = await getDocs(q);
 				if (!querySnapshot.empty) {
+					dispatch(
+						setUser({
+							id: querySnapshot.docs[0].id,
+							name: querySnapshot.docs[0].data().name,
+							email: querySnapshot.docs[0].data().email,
+							isAnonymous: true,
+							status: querySnapshot.docs[0].data().status
+						})
+					);
+					localStorage.setItem('userId', querySnapshot.docs[0].id);
 					navigate('/home');
 				} else {
 					message.error('Invalid Secret Phrase');
