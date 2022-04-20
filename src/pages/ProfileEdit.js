@@ -16,6 +16,7 @@ import {
 } from '../features/userSlice';
 
 function ProfileEdit() {
+	const initialUser = JSON.parse(localStorage.getItem('user'));
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 	const nameRef = useRef();
@@ -116,6 +117,7 @@ function ProfileEdit() {
 									ref={nameRef}
 									width={20}
 									placeholder="Enter your full name"
+									defaultValue={initialUser.name ? initialUser.name : ''}
 								/>
 							</Form.Item>
 							.
@@ -126,7 +128,11 @@ function ProfileEdit() {
 								label="Status"
 								nam="status"
 							>
-								<Input ref={statusRef} placeholder="Set your new status" />
+								<Input
+									defaultValue={initialUser.status ? initialUser.status : ''}
+									ref={statusRef}
+									placeholder="Set your new status"
+								/>
 							</Form.Item>
 							<Form.Item>
 								<Button
