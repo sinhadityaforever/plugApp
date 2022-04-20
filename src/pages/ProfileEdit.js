@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Topbar from '../components/Topbar';
 import './ProfileEdit.css';
 import avatar from '../../assets/avatar.png';
@@ -21,7 +21,14 @@ function ProfileEdit() {
 	const nameRef = useRef();
 	const statusRef = useRef();
 
+	useEffect(() => {
+		if (!localStorage.getItem('user')) {
+			navigate('/');
+		}
+	}, []);
+
 	const [image, setImage] = useState(null);
+	const [file, setFile] = useState(null);
 	const previewFile = (file) => {
 		const reader = new FileReader();
 		reader.readAsDataURL(file);
@@ -31,31 +38,38 @@ function ProfileEdit() {
 	};
 	const imageHandler = (selectedImage) => {
 		previewFile(selectedImage);
+		setFile(selectedImage);
 	};
 	let userId = localStorage.getItem('userId');
 	console.log('this is userId' + userId);
 	const submitHandler = async () => {
-		console.log(1);
 		const userRef = doc(db, 'users', userId);
-		console.log(2);
+
 		if (image != null) {
+			console.log('if block executed');
 			const imageUuid = uuid();
-			const imageRef = ref(storage, `images/${imageUuid}`);
-			await uploadBytes(imageRef, image);
+			const imageRef = ref(storage, `images/${imageUuid}.jpg`);
+			await uploadBytes(imageRef, file);
 			const imageUrl = await getDownloadURL(imageRef);
 			await updateDoc(userRef, {
 				name: nameRef.current.input.value,
 				status: nameRef.current.input.value,
 				imageUrl: imageUrl
 			});
+
 			dispatch(updateName(nameRef.current.input.value));
 			dispatch(updateStatus(statusRef.current.input.value));
 			dispatch(updateImageUrl(imageUrl));
 		} else {
+			console.log('else block executed');
 			await updateDoc(userRef, {
 				name: nameRef.current.input.value,
 				status: statusRef.current.input.value
 			});
+			console.log(
+				'await finished with' + nameRef.current.input.value,
+				statusRef.current.input.value
+			);
 			dispatch(updateName(nameRef.current.input.value));
 			dispatch(updateStatus(statusRef.current.input.value));
 		}

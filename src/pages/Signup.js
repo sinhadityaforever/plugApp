@@ -1,5 +1,5 @@
 import { Card, Form, Switch, Input, Button, message } from 'antd';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import loginImage from '../../assets/login2png.png';
 import './Login.css';
 import logoText from '../../assets/logo-text2.png';
@@ -18,6 +18,11 @@ function Signup() {
 	const dispatch = useDispatch();
 	const [isAnonymous, setIsAnonymous] = useState(false);
 	const navigate = useNavigate();
+	useEffect(() => {
+		if (localStorage.getItem('user')) {
+			navigate('/home');
+		}
+	}, []);
 	const onSignup = async () => {
 		if (!isAnonymous) {
 			const result = await authHelper();
@@ -35,7 +40,10 @@ function Signup() {
 							const newUser = await addDoc(collection(db, 'users'), {
 								name: result.data.user.displayName,
 								email: result.data.user.email,
-								isAnonymous: false
+								isAnonymous: false,
+								likedProfiles: [],
+								starredProfiles: [],
+								totalLikes: 0
 							});
 							dispatch(
 								setUser({
@@ -92,7 +100,10 @@ function Signup() {
 							}`,
 							email: randomUser.data.results[0].email,
 							isAnonymous: true,
-							secretPhrase: slug
+							secretPhrase: slug,
+							likedProfiles: [],
+							starredProfiles: [],
+							totalLikes: 0
 						});
 						dispatch(
 							setUser({

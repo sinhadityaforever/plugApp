@@ -1,5 +1,5 @@
 import { Card, Form, Switch, Input, Button, message } from 'antd';
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import loginImage from '../../assets/login2png.png';
 import LandingHeader from '../components/LandingHeader';
 import './Login.css';
@@ -13,10 +13,17 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setUser } from '../features/userSlice';
 
 function Login() {
+	const navigate = useNavigate();
+	useEffect(() => {
+		if (localStorage.getItem('user')) {
+			navigate('/home');
+		}
+	}, []);
+
 	const dispatch = useDispatch();
 	const [isAnonymous, setIsAnonymous] = useState(false);
 	const phraseRef = useRef();
-	const navigate = useNavigate();
+
 	const onLogin = async () => {
 		if (!isAnonymous) {
 			const result = await authHelper();
@@ -37,7 +44,8 @@ function Login() {
 								name: querySnapshot.docs[0].data().name,
 								email: querySnapshot.docs[0].data().email,
 								isAnonymous: false,
-								status: querySnapshot.docs[0].data().status
+								status: querySnapshot.docs[0].data().status,
+								imageUrl: querySnapshot.docs[0].data().imageUrl
 							})
 						);
 						localStorage.setItem('userId', querySnapshot.docs[0].id);
@@ -65,7 +73,8 @@ function Login() {
 							name: querySnapshot.docs[0].data().name,
 							email: querySnapshot.docs[0].data().email,
 							isAnonymous: true,
-							status: querySnapshot.docs[0].data().status
+							status: querySnapshot.docs[0].data().status,
+							imageUrl: querySnapshot.docs[0].data().imageUrl
 						})
 					);
 					localStorage.setItem('userId', querySnapshot.docs[0].id);

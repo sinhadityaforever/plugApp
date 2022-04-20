@@ -19,33 +19,23 @@ export const userSlice = createSlice({
 			console.log(state.status);
 		},
 		updateName: (state, action) => {
-			state.name = action.payload;
+			let user = JSON.parse(localStorage.getItem('user'));
+			user.name = action.payload;
+			state = user;
 			localStorage.setItem('user', JSON.stringify(state));
 		},
 		updateImageUrl: (state, action) => {
-			state.imageUrl = action.payload;
+			let user = JSON.parse(localStorage.getItem('user'));
+			user.imageUrl = action.payload;
+			state = user;
 			localStorage.setItem('user', JSON.stringify(state));
 		},
 		updateStatus: (state, action) => {
-			state.status = action.payload;
+			let user = JSON.parse(localStorage.getItem('user'));
+			user.status = action.payload;
+			state = user;
 			localStorage.setItem('user', JSON.stringify(state));
 		}
-
-		// setUser: (state, action) => {
-		// 	state.user = action.payload;
-		// 	console.log(state.user);
-		// 	localStorage.setItem('user', JSON.stringify(state.user));
-		// },
-		// removeUser: (state, action) => {
-		// 	state.user = {};
-		// },
-		// updateUser: (state, action) => {
-		// 	localStorage.setItem('user', JSON.stringify(state.user));
-		// },
-		// updateStatus: (state, action) => {
-		// 	state.user.status = action.payload;
-		// 	localStorage.setItem('user', JSON.stringify(state.user));
-		// }
 	}
 });
 

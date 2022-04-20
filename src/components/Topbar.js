@@ -9,14 +9,24 @@ import {
 } from '@ant-design/icons';
 import avatar from '../../assets/avatar.png';
 import { Dropdown, Menu } from 'antd';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 function Topbar() {
+	const initialUser = JSON.parse(localStorage.getItem('user'));
+	const navigate = useNavigate();
+	const editProfileHandler = () => {
+		navigate('/editprofile');
+	};
+	const logoutHandler = () => {
+		localStorage.removeItem('user');
+		localStorage.removeItem('userId');
+		navigate('/');
+	};
+
 	const menu = (
 		<Menu>
-			<Menu.Item>View Profile</Menu.Item>
-			<Menu.Item>Edit Profile</Menu.Item>
-			<Menu.Item>Logout</Menu.Item>
+			<Menu.Item onClick={editProfileHandler}>Edit Profile</Menu.Item>
+			<Menu.Item onClick={logoutHandler}>Logout</Menu.Item>
 		</Menu>
 	);
 	return (
@@ -38,7 +48,10 @@ function Topbar() {
 			<div className="topbar-right">
 				<div>
 					<Dropdown trigger={['click']} overlay={menu}>
-						<img className="avatar-image" src={avatar}></img>
+						<img
+							className="avatar-image"
+							src={initialUser.imageUrl ? initialUser.imageUrl : avatar}
+						></img>
 					</Dropdown>
 				</div>
 				{/* <EditFilled style={{ fontSize: '2rem', color: 'white' }} />

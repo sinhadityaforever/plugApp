@@ -33,7 +33,10 @@ function Share() {
 	return (
 		<div className="share-wrapper">
 			<div className="share-top">
-				<img className="share-profile-img" src={dummyImg}></img>
+				<img
+					className="share-profile-img"
+					src={initialUser.imageUrl ? initialUser.imageUrl : dummyImg}
+				></img>
 				<input
 					placeholder={`Your current status: ${status}`}
 					className="share-input"
